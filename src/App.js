@@ -198,23 +198,42 @@ async componentDidMount() {
     this.props.setprogress(100);
 }
 
-  render() {
+render() {
     return (
-      <div className='container'>
+      <div className="container">
         <center>
-        <h1 className='text-danger' style={{marginTop: '50px'}}>News Tak - {this.capitalfl(this.props.category)}</h1>
-        <h4 className='p-1s'><em><u>Aapko Rakhe aage</u></em></h4>
+          <h1 className="text-danger" style={{ marginTop: "50px" }}>
+            News Tak - {this.capitalfl(this.props.category)}
+          </h1>
+          <h4 className="p-1s">
+            <em>
+              <u>Aapko Rakhe aage</u>
+            </em>
+          </h4>
         </center>
-        <div className='row mt-1 mb-1'>
-            {this.state.articles.map((element)=>{
-                return<div className="col-md-4" key={element.url}>
-                <Newphone title={element.title} description={element.description} imgurl={element.urlToImage} newsurl={element.url} author={element.author} Date={element.publishedAt} source={element.source.name}/>
-                </div>
-            })}
-      </div>
+        <div className="row mt-1 mb-1">
+          {Array.isArray(this.state.articles) && this.state.articles.length > 0 ? (
+            this.state.articles.map((element) => (
+              <div className="col-md-4" key={element.url}>
+                <Newphone
+                  title={element.title}
+                  description={element.description}
+                  imgurl={element.urlToImage}
+                  newsurl={element.url}
+                  author={element.author}
+                  Date={element.publishedAt}
+                  source={element.source.name}
+                />
+              </div>
+            ))
+          ) : (
+            <p>No articles available</p>
+          )}
+        </div>
       </div>
     );
   }
+  
 
 static defaultProps = {
     // country:'us',
