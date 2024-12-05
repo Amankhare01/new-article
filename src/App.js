@@ -20,7 +20,7 @@ export default class App extends Component {
   async componentDidMount() {
     this.props.setprogress(10);
     const apiKey = "e92fe607bf0f01dbd6c3f4cc0b39dbd2"; // Replace with your GNews API key
-    const url = `https://gnews.io/api/v4/top-headlines?token=${apiKey}&lang=en&country=us&q=${this.props.category}`;
+    const url = `https://gnews.io/api/v4/top-headlines?token=${apiKey}&lang=en&country=in&q=${this.props.category}`;
 
     try {
       let response = await fetch(url);
