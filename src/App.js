@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Newphone from './components/Newphone';
+import NewsCard from './components/NewsCard';
 import PropTypes from 'prop-types';
 
 export default class App extends Component {
@@ -40,17 +40,17 @@ export default class App extends Component {
           <h1 className="text-danger" style={{ marginTop: '50px' }}>
             News Tak - {this.capitalize(this.props.category)}
           </h1>
-          <h4 className="p-1s">
+          {/* <h4 className="p-1s">
             <em>
               <u>Aapko Rakhe aage</u>
             </em>
-          </h4>
+          </h4> */}
         </center>
         <div className="row mt-1 mb-1">
           {this.state.articles && this.state.articles.length > 0 ? (
             this.state.articles.map((element) => (
-              <div className="col-md-4" key={element.url}>
-                <Newphone
+              <div className="col-md-4 mt-4 d-flex" key={element.url}>
+                <NewsCard
                   title={element.title}
                   description={element.description}
                   imgurl={element.image}

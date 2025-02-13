@@ -38,3 +38,59 @@ body{
     transform: rotate(360deg);
   }
 }
+
+
+/* Parent container for cards */
+.news-container {
+  display: flex;
+  flex-wrap: wrap; /* Wrap to next row if needed */
+  justify-content: center; /* Centers cards */
+  gap: 20px; /* Equal space between cards */
+  padding: 20px;
+}
+
+/* Ensure all cards have the same size */
+.news-card {
+  width: 18rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make all cards the same height */
+.card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Image should be the same size for all cards */
+.card-img-top {
+  height: 180px;
+  object-fit: cover;
+}
+
+/* Ensure title does not push card height */
+.card-title {
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Limit description to 3 lines */
+.card-text {
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* Truncate after 3 lines */
+  overflow: hidden;
+}
+
+/* Align button to bottom */
+.btn-primary {
+  margin-top: auto;
+}
