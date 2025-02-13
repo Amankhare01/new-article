@@ -37,7 +37,7 @@ export default class App extends Component {
     return (
       <div className="container">
         <center>
-          <h1 className="text-danger" style={{ marginTop: '50px' }}>
+          <h1 className="text-grey" style={{ marginTop: '50px' }}>
             News Tak - {this.capitalize(this.props.category)}
           </h1>
           {/* <h4 className="p-1s">
