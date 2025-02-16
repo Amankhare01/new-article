@@ -49,7 +49,7 @@ export default class App extends Component {
         <div className="row mt-1 mb-1">
           {this.state.articles && this.state.articles.length > 0 ? (
             this.state.articles.map((element) => (
-              <div className="col-md-4 mt-4 d-flex" key={element.url}>
+              <div className="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch" key={element.url}>
                 <NewsCard
                   title={element.title}
                   description={element.description}
