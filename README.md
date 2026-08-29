@@ -1,70 +1,73 @@
-# Getting Started with Create React App
+# News Tak - Modern React News Portal
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, responsive editorial news web application built with **React 18**, **Tailwind CSS**, **React Router v6**, and powered by **NewsData.io API**.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- 📰 **Real-Time News Feeds**: Latest news across categories (`General`, `Business`, `Entertainment`, `Health`, `Science`, `Sports`, `Technology`).
+- 🔍 **Live Search**: Instant news search powered by NewsData.io query endpoint.
+- 📖 **Full Article Detail View**: Comprehensive editorial article layout with hero imagery, publisher metadata, readable typography, and external link to original source.
+- 🌓 **Dark Mode**: Built-in dark mode toggle with persistent local storage preference.
+- 📱 **Responsive Grid**: Adaptive card grid with hover scaling, source favicons, and relative publication timestamps.
+- ⚡ **Skeleton Loading & Error States**: Graceful UI placeholders during fetches, rate-limit warnings, and key configuration guides.
 
-Runs the app in the development mode.\
-Open (https://new-article-production.up.railway.app/) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### 1. Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (v16+)
+- Free API Key from [NewsData.io](https://newsdata.io/)
 
-### `npm run build`
+### 2. Environment Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Copy `.env.example` to `.env` or create a `.env` file in the root directory:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+cp .env.example .env
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Add your NewsData.io API Key to `.env`:
 
-### `npm run eject`
+```env
+REACT_APP_NEWSDATA_API_KEY=your_newsdata_api_key_here
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+> ⚠️ **Note**: Never commit your `.env` file containing private API keys. `.env` is ignored in `.gitignore`.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 3. Installation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Install project dependencies:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm install
+```
 
-## Learn More
+### 4. Running Locally
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Start the React development server:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm start
+```
 
-### Code Splitting
+Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## Build & Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+To generate a production build:
 
-### Making a Progressive Web App
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+To deploy to GitHub Pages:
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+npm run deploy
+```

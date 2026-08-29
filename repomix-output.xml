@@ -1,0 +1,821 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+public/
+  favicon-16x16.png
+  favicon-32x32.png
+  favicon.ico
+  image.jpg
+  index.html
+  manifest.json
+  robots.txt
+src/
+  assets/
+    image/
+      picture.png
+  components/
+    Navbar.js
+    News.js
+    NewsCard.js
+  App.css
+  App.js
+  index.css
+  index.js
+  reportWebVitals.js
+  setupTests.js
+.gitattributes
+.gitignore
+package.json
+README.md
+sampleoutput.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="public/manifest.json">
+{
+  "short_name": "React App",
+  "name": "Create React App Sample",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+</file>
+
+<file path="public/robots.txt">
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:
+</file>
+
+<file path="src/components/News.js">
+import React, { Component } from 'react'
+import App  from '../App'
+import Navbar from './Navbar'
+import {Route,Routes} from 'react-router-dom';
+import LoadingBar from 'react-top-loading-bar'
+export default class News extends Component {
+
+  state = {
+    progress:0
+  }
+
+  setprogress=(progress)=>{
+    this.setState({progress: progress})
+  }
+  render() {
+    return (
+      <div>
+        <Navbar/>
+        <LoadingBar
+        color='#f11946'
+        height={2}
+        progress={this.state.progress}
+      />
+        <Routes>
+    <Route exact path="/business"  element={<App setprogress={this.setprogress} key="business" country='in' category='business'/>}></Route>
+    <Route exact path="/"  element={<App setprogress={this.setprogress} key="business" country='in' category='business'/>}></Route>
+    <Route exact path="/entertainment" element={<App setprogress={this.setprogress} key="entertainment" country="in" category="entertainment"/>}></Route>
+    <Route exact path="/general" element={<App setprogress={this.setprogress} key="general" country='in' category='general'/>}> </Route>
+    <Route exact path="/health" element={<App setprogress={this.setprogress} key="health" country='in' category='health'/>}> </Route>
+    <Route exact path="/science" element={<App setprogress={this.setprogress} key="science" country='in' category='science'/>}> </Route>
+    <Route exact path="/sports" element={<App setprogress={this.setprogress} key="sports" country='in' category='sports'/>}></Route>
+    <Route exact path="/technology" element={<App setprogress={this.setprogress} key="technology" country='in' category='technology'/>}> </Route>
+    </Routes>
+      </div>
+    )
+  }
+}
+</file>
+
+<file path="src/components/NewsCard.js">
+import React, { Component } from 'react';
+import '../App.css'
+export default class NewsCard extends Component {
+  render() {
+    let { title, description, imgurl, newsurl, author, Date, source } = this.props;
+    return (
+      <div className="news-card">
+        <div className="card">
+          <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {source}
+          </span>
+          <img 
+            src={!imgurl ? "image.jpg" : imgurl} 
+            className="card-img-top" 
+            alt="news" 
+          />
+          <div className="card-body">
+            <h5 className="card-title">{title}</h5>
+            <p className="card-text">{description}</p>
+            <p className="card-text">
+              <small className="text-muted">By {!author ? "Unknown" : author} on {Date}</small>
+            </p>
+            <a href={newsurl} className="btn btn-primary">Read full article</a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+</file>
+
+<file path="src/index.css">
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+</file>
+
+<file path="src/index.js">
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router } from 'react-router-dom';
+import News from './components/News';
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <Router>
+    <News />
+  </Router>
+);
+reportWebVitals();
+</file>
+
+<file path="src/reportWebVitals.js">
+const reportWebVitals = onPerfEntry => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+};
+
+export default reportWebVitals;
+</file>
+
+<file path="src/setupTests.js">
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+</file>
+
+<file path=".gitattributes">
+# Auto detect text files and perform LF normalization
+* text=auto
+</file>
+
+<file path=".gitignore">
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.vercel
+</file>
+
+<file path="sampleoutput.json">
+{
+    "status": "ok",
+    "totalResults": 14,
+    "articles": [
+        {
+            "source": {
+                "id": "the-verge",
+                "name": "The Verge"
+            },
+            "author": "Jon Porter",
+            "title": "HMD’s repairable Nokia phone initiative lands stateside",
+            "description": "HMD’s Nokia G310 is a repairable $186 smartphone that’ll be available from T-Mobile and Metro by T-Mobile on August 24th. You can repair its battery and screen.",
+            "url": "http://www.theverge.com/2023/8/17/23835512/hmd-nokia-g310-price-release-date-specs-feature",
+            "urlToImage": "https://cdn.vox-cdn.com/thumbor/abjiE4hs57v4LrYLvGaDO0Nj9mU=/0x0:848x565/1200x628/filters:focal(214x258:215x259)/cdn.vox-cdn.com/uploads/chorus_asset/file/24855798/nokia_G310_DTC_Display_desktop.jpg",
+            "publishedAt": "2023-08-17T09:08:43Z",
+            "content": "HMDs repairable Nokia phone initiative lands stateside\r\nHMDs repairable Nokia phone initiative lands stateside\r\n / The Nokia G310 will be available via T-Mobile next week, with spare parts and repair… [+2128 chars]"
+        },
+        {
+            "source": {
+                "id": "fox-news",
+                "name": "Fox News"
+            },
+            "author": "Elizabeth Pritchett",
+            "title": "Texas woman charged after threatening to kill federal judge overseeing election case against Trump: affidavit",
+            "description": "A Texas woman was arrested after making a phone call threatening to kill U.S. District Judge Tanya Chutkan, U.S. Rep. Sheila Jackson Lee, all Democrats in D.C. and the LGBTQ community.",
+            "url": "https://www.foxnews.com/us/texas-woman-charged-threatening-kill-federal-judge-overseeing-election-case-trump-affidavit",
+            "urlToImage": "https://static.foxnews.com/foxnews.com/content/uploads/2023/08/Donald-Trump-Tanya-Chutkan.jpg",
+            "publishedAt": "2023-08-17T07:35:32Z",
+            "content": "A Texas woman is behind bars after allegedly threatening to kill U.S. District Judge Tanya Chutkan the federal judge overseeing Special Counsel Jack Smith's 2020 election conspiracy case against form… [+2785 chars]"
+        },
+        {
+            "source": {
+                "id": "bloomberg",
+                "name": "Bloomberg"
+            },
+            "author": "Bloomberg",
+            "title": "China Is Dragging Smartphone Market to Worst Year in a Decade",
+            "description": null,
+            "url": "https://news.google.com/rss/articles/CBMicGh0dHBzOi8vd3d3LmJsb29tYmVyZy5jb20vbmV3cy9hcnRpY2xlcy8yMDIzLTA4LTE3L2NoaW5hLWlzLWRyYWdnaW5nLXNtYXJ0cGhvbmUtbWFya2V0LXRvLXdvcnN0LXllYXItaW4tYS1kZWNhZGXSAQA?oc=5",
+            "urlToImage": null,
+            "publishedAt": "2023-08-17T05:41:25+00:00",
+            "content": null
+        },
+        {
+            "source": {
+                "id": "abc-news",
+                "name": "ABC News"
+            },
+            "author": "Shannon Crawford",
+            "title": "Blinken speaks to Paul Whelan, American wrongfully detained by Moscow, sources confirm",
+            "description": "Whelan spoke to Blinken by phone from a remote prison camp in Russia.",
+            "url": "https://abcnews.go.com/Politics/blinken-speaks-paul-whelan-american-wrongfully-detained-moscow/story?id=102324643",
+            "urlToImage": "https://s.abcnews.com/images/Politics/whelan-1-gty-er-230816_1692220316224_hpMain_16x9_992.jpg",
+            "publishedAt": "2023-08-16T21:58:33Z",
+            "content": "Secretary of State Antony Blinken spoke over the phone with Paul Whelan, a wrongfully imprisoned American citizen who has been jailed by Moscow since 2018, according to sources familiar with the call… [+2606 chars]"
+        },
+        {
+            "source": {
+                "id": "cnn",
+                "name": "CNN"
+            },
+            "author": "Kylie Atwood, Jennifer Hansler, Kayla Tausche",
+            "title": "Exclusive: Blinken speaks by phone with Paul Whelan, who is wrongfully detained in Russia",
+            "description": "US Secretary of State Antony Blinken spoke by phone on Wednesday with wrongfully detained American Paul Whelan, who is being held in a remote prison camp in Russia, a source familiar told CNN.",
+            "url": "https://www.cnn.com/2023/08/16/politics/blinken-paul-whelan-phone-call/index.html",
+            "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/230509164550-file-paul-whelan-190823.jpg?c=16x9&q=w_800,c_fill",
+            "publishedAt": "2023-08-16T20:09:14Z",
+            "content": "US Secretary of State Antony Blinken spoke by phone on Wednesday with wrongfully detained American Paul Whelan, who is being held in a remote prison camp in Russia, a source familiar told CNN.\r\nThe t… [+2317 chars]"
+        },
+        {
+            "source": {
+                "id": "wired",
+                "name": "Wired"
+            },
+            "author": "Wired",
+            "title": "Urbanista Malibu Solar Speaker: Battery Life, Specs, Price, Release Date",
+            "description": "After the success of its solar-charging headphones, Urbanista is back with a Bluetooth speaker that can play music for 45 hours. If you treat it right, it might never need to be plugged in at all.",
+            "url": "https://www.wired.com/story/urbanista-malibu-solar-speaker",
+            "urlToImage": "https://media.wired.com/photos/64dc4d3d0b67c709cbcaac79/191:100/w_1280,c_limit/Urbanista_Malibu_DesertGray_gear_Stereolink.jpg",
+            "publishedAt": "2023-08-16T13:00:00Z",
+            "content": "Ever since Swedish audio brand Urbanista first brought out its mightily impressive solar headphones that, yes, charged even while they were being used, WIRED has been hoping the company would take th… [+2656 chars]"
+        },
+        {
+            "source": {
+                "id": "t3n",
+                "name": "T3n"
+            },
+            "author": "Claudia Wieschollek",
+            "title": "iPhone 14: Beschwerden wegen nachlassende Akkuleistung nach nur einem Jahr",
+            "description": "Gerade mal ein Jahr ist das iPhone 14 (Pro) auf dem Markt – doch Nutzer:innen beklagen sich bereits über nachl",
+            "url": "https://t3n.de/news/iphone-14-beschwerden-akkuleistung-1569630/",
+            "urlToImage": "https://t3n.de/news/wp-content/uploads/2022/09/ios-16-1-iphone-14-pro_hero.jpg",
+            "publishedAt": "2023-08-14T10:20:58Z",
+            "content": "Im Internet mehren sich die Berichte über vorzeitig nachlassende Akkukapazitäten bei iPhone 14 und iPhone 14 Pro. Wie mehrere Nutzer:innen übereinstimmend erklären, liegt die Kapazität der Akkus ihre… [+2293 chars]"
+        },
+        {
+            "source": {
+                "id": "techradar",
+                "name": "TechRadar"
+            },
+            "author": "Becky Scarrott",
+            "title": "Bose QuietComfort Ultra headphones and earbuds just leaked – with serious prices",
+            "description": "A total of three Bose QuietComfort options could arrive soon",
+            "url": "https://www.techradar.com/audio/earbuds-airpods/bose-quietcomfort-ultra-headphones-and-earbuds-just-leaked-with-serious-prices",
+            "urlToImage": "https://cdn.mos.cms.futurecdn.net/aYHBmmLxgiXjpzxRZ89KCb-1200-80.png",
+            "publishedAt": "2023-08-08T11:08:22Z",
+            "content": "Bose's QuietComfort range needs no further fanfare from us – although if you'd like more hoots and hollers, see our Bose QuietComfort Earbuds II review, our Bose QuietComfort 45 review, Bose QuietCom… [+2985 chars]"
+        },
+        {
+            "source": {
+                "id": "techradar",
+                "name": "TechRadar"
+            },
+            "author": "Axel Metz",
+            "title": "3 reasons not to buy the iPhone 15 if you already own one of the best iPhones",
+            "description": "The iPhone 15 line will be great – but think before you buy",
+            "url": "https://www.techradar.com/phones/iphone/3-reasons-not-to-buy-the-iphone-15-if-you-already-own-one-of-the-best-iphones",
+            "urlToImage": "https://cdn.mos.cms.futurecdn.net/oSpAqX4B9vq4FsrghWuwKY-1200-80.jpg",
+            "publishedAt": "2023-07-22T04:00:00Z",
+            "content": "Apple looks set to debut the iPhone 15, iPhone 15 Plus, iPhone 15 Pro and iPhone 15 Pro Max in September this year, but we’re quietly confident that we already know what each new phone will bring to … [+6421 chars]"
+        },
+        {
+            "source": {
+                "id": "techradar",
+                "name": "TechRadar"
+            },
+            "author": null,
+            "title": "Phones",
+            "description": "All TechRadar pages tagged 'Phones",
+            "url": "https://www.techradar.com/phones",
+            "urlToImage": null,
+            "publishedAt": "2023-06-21T13:25:27Z",
+            "content": "Smartphones are arguably the most personal devices we own, keeping us connected at all times and acting as the heart of our tech lives. We may not spend much time actually speaking on them these days… [+828 chars]"
+        },
+        {
+            "source": {
+                "id": "the-hindu",
+                "name": "The Hindu"
+            },
+            "author": "Special Correspondent",
+            "title": "Hours after ouster as CBI chief, Alok Verma’s phone numbers made it to Pegasus list: Report",
+            "description": "“Also added to the list of numbers at the same time as Verma were two other senior CBI officials, Rakesh Asthana and A.K. Sharma...,” news portal The Wire claimed in a report.",
+            "url": "https://www.thehindu.com/news/national/hours-after-ouster-as-cbi-chief-alok-vermas-phone-numbers-made-it-to-pegasus-list-report/article35477226.ece",
+            "urlToImage": "https://www.thehindu.com/news/national/wjxhfq/article35477225.ece/ALTERNATES/LANDSCAPE_615/AlokVerma",
+            "publishedAt": "2021-07-22T17:18:05Z",
+            "content": "The Wire on Thursday reported that hours after Prime Minister Narendra Modi acted to oust Alok Verma from his post as head of the Central Bureau of Investigation (CBI) at midnight on October 23, 2018… [+1223 chars]"
+        },
+        {
+            "source": {
+                "id": "wired-de",
+                "name": "Wired.de"
+            },
+            "author": "Benedikt Sauer",
+            "title": "Samsung: Neue Smartphones bieten Oberklasse-Features für jeden",
+            "description": "Mit der Enthüllung des Galaxy A52 und A72 zeigt Samsung, dass Smartphones mit Oberklasse-Features auch zum attraktiven Preis zu haben sind.",
+            "url": "https://www.gq-magazin.de/auto-technik/article/samsung-galaxy-a-serie-mittelklasse-smartphones-mit-oberklasse-features",
+            "urlToImage": "https://res.cloudinary.com/wired-de/image/upload/t_teaser_square/v1/0/samsung-galaxy-a52-a72-neue-smartphones-technik-aufmjpg.jpg",
+            "publishedAt": "2021-03-18T07:30:00Z",
+            "content": "Wir erinnern uns: Im Januar stellte Samsung das Galaxy A32 5G vor und gab damit den Startschuss für die neue A-Serie 2021. Der Nachfolger des Galaxy A31 erfreute die Fachpresse mit 5G-Datentransfer, … [+3871 chars]"
+        },
+        {
+            "source": {
+                "id": "spiegel-online",
+                "name": "Spiegel Online"
+            },
+            "author": "Spiegel Online",
+            "title": "Machtkampf in Venezuela: Guaidó als Parlamentspräsident vereidigt",
+            "description": "Sicherheitskräfte hatten Venezuelas Oppositionsführer Juan Guaidó zunächst erneut den Zutritt zum Kongress versperrt. Dann gelangte er doch hinein und wurde als Parlamentspräsident vereidigt - bei Smartphone-Licht.",
+            "url": "http://www.spiegel.de/politik/ausland/venezuela-juan-guaido-als-parlamentspraesident-vereidigt-a-1303935.html",
+            "urlToImage": "https://cdn1.spiegel.de/images/image-1503808-860_poster_16x9-nqmm-1503808.jpg",
+            "publishedAt": "2020-01-07T18:47:39Z",
+            "content": "Dienstag, 07.01.2020  \r\n19:47 Uhr\r\nDer Machtkampf um das Parlament in Venezuela spitzt sich zu. Der selbsternannte Übergangspräsident Juan Guaidó ist zum zweiten Mal als Parlamentspräsident vereidigt… [+1696 chars]"
+        },
+        {
+            "source": {
+                "id": "mashable",
+                "name": "Mashable"
+            },
+            "author": "Sasha Lekach",
+            "title": "How to make iPhone's Screen Time actually helpful",
+            "description": "Maybe this year we'll actually spend less time staring at a phone screen.",
+            "url": "https://mashable.com/article/screen-time-ios-iphone-wwdc-2019-improve/",
+            "urlToImage": "https://mondrian.mashable.com/2019%252F05%252F29%252F2b%252Fc28429efe72d4cd6ae4e1f36a6d5bcb6.7e8a8.jpg%252F1200x630.jpg?signature=_KJ1rjuTpolkLOy9GFR88GbTg80=",
+            "publishedAt": "2019-05-29T15:00:00Z",
+            "content": "Your iPhone is keeping track, but is it enough?\r\nIt's been a year since Apple introduced a new feature to its iOS settings: \"Screen Time,\" the activity and phone use tracker. \r\nSince updating to iOS … [+5271 chars]"
+        }
+    ]
+}
+</file>
+
+<file path="public/index.html">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="News tak"
+      content="News tak Lucknow"
+    />
+    <head>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>News tak</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+  </body>
+</html>
+</file>
+
+<file path="src/components/Navbar.js">
+import React from 'react'
+import {Link } from 'react-router-dom';
+
+function Navbar() {
+  return (
+    <div>
+      <nav className="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
+  <div className="container-fluid">
+    <Link className="navbar-brand" to="/">NewsTak</Link>
+    <button
+  className="navbar-toggler"
+  type="button"
+  data-bs-toggle="collapse"
+  data-bs-target="#navbarSupportedContent"
+  aria-controls="navbarSupportedContent"
+  aria-expanded="false"
+  aria-label="Toggle navigation"
+>
+  <span className="navbar-toggler-icon"></span>
+</button>
+
+    <div className="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Business">Business</Link></li>
+              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Entertainment">Entertainment</Link></li>
+              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/General">General</Link></li>
+              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Health">Health</Link></li>
+              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Science">Science</Link></li>
+              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Sports">Sports</Link></li>
+              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Technology">Technology</Link></li>
+        </ul>
+    </div>
+  </div>
+</nav>
+    </div>
+  )
+}
+
+export default Navbar
+</file>
+
+<file path="src/App.css">
+.App {
+  text-align: center;
+}
+body{
+  background-color: #929292;
+}
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* Parent container for news cards */
+/* News card layout fix */
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Make card body stretch */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+/* Keep button at the bottom */
+.btn-primary {
+  margin-top: auto;
+}
+
+/* Responsive Fix */
+@media (max-width: 992px) { /* Tablets (max-width: 992px) */
+  .col-lg-4 {
+    flex: 0 0 50%; /* 2 cards per row */
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 576px) { /* Phones (max-width: 576px) */
+  .col-lg-4 {
+    flex: 0 0 100%; /* 1 card per row */
+    max-width: 100%;
+  }
+}
+</file>
+
+<file path="package.json">
+{
+  "homepage": "https://amankhare01.github.io/ecommerce-site",
+  "name": "newbro",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "gh-pages": "^6.0.0",
+    "node-fetch": "^3.3.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-router-dom": "^6.15.0",
+    "react-scripts": "5.0.1",
+    "react-top-loading-bar": "^2.3.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  }
+}
+</file>
+
+<file path="README.md">
+# Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open (https://new-article-production.up.railway.app/) to view it in your browser.
+
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+</file>
+
+<file path="src/App.js">
+import React, { Component } from 'react';
+import './App.css';
+import NewsCard from './components/NewsCard';
+import PropTypes from 'prop-types';
+
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      articles: [],
+      loading: false,
+    };
+    document.title = `${this.capitalize(this.props.category)} - News Tak`;
+  }
+
+  capitalize = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  async componentDidMount() {
+    this.props.setprogress(10);
+    const apiKey = "e92fe607bf0f01dbd6c3f4cc0b39dbd2"; // Replace with your GNews API key
+    const url = `https://gnews.io/api/v4/top-headlines?token=${apiKey}&lang=en&country=in&q=${this.props.category}`;
+
+    try {
+      let response = await fetch(url);
+      let parsedData = await response.json();
+      console.log(parsedData);
+      this.setState({ articles: parsedData.articles });
+    } catch (error) {
+      console.error("Error fetching GNews data:", error);
+    }
+    this.props.setprogress(100);
+  }
+
+  render() {
+    return (
+      <div className="container">
+        <center>
+          <h1 className="text-grey" style={{ marginTop: '50px' }}>
+            News Tak - {this.capitalize(this.props.category)}
+          </h1>
+          {/* <h4 className="p-1s">
+            <em>
+              <u>Aapko Rakhe aage</u>
+            </em>
+          </h4> */}
+        </center>
+        <div className="row mt-1 mb-1">
+          {this.state.articles && this.state.articles.length > 0 ? (
+            this.state.articles.map((element) => (
+              <div className="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch" key={element.url}>
+                <NewsCard
+                  title={element.title}
+                  description={element.description}
+                  imgurl={element.image}
+                  newsurl={element.url}
+                  author={element.source?.name}
+                  Date={element.publishedAt}
+                  source={element.source?.name}
+                />
+              </div>
+            ))
+          ) : (
+            <p>Loading</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  static defaultProps = {
+    category: 'general',
+  };
+
+  static propTypes = {
+    category: PropTypes.string,
+  };
+}
+</file>
+
+</files>
