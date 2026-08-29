@@ -41,6 +41,7 @@ The content is organized as follows:
 
 <directory_structure>
 public/
+  _redirects
   favicon-16x16.png
   favicon-32x32.png
   favicon.ico
@@ -53,24 +54,39 @@ src/
     image/
       picture.png
   components/
-    Navbar.js
-    News.js
-    NewsCard.js
-  App.css
-  App.js
+    ErrorState.jsx
+    Navbar.jsx
+    NewsCard.jsx
+    SkeletonCard.jsx
+  pages/
+    ArticleDetail.jsx
+    NewsHome.jsx
+    SearchResults.jsx
+  services/
+    newsApi.js
+  utils/
+    formatRelativeTime.js
+  App.jsx
   index.css
   index.js
   reportWebVitals.js
   setupTests.js
+.env.example
 .gitattributes
 .gitignore
 package.json
+postcss.config.js
 README.md
 sampleoutput.json
+tailwind.config.js
 </directory_structure>
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="public/_redirects">
+/*  /index.html  200
+</file>
 
 <file path="public/manifest.json">
 {
@@ -106,108 +122,1265 @@ User-agent: *
 Disallow:
 </file>
 
-<file path="src/components/News.js">
-import React, { Component } from 'react'
-import App  from '../App'
-import Navbar from './Navbar'
-import {Route,Routes} from 'react-router-dom';
-import LoadingBar from 'react-top-loading-bar'
-export default class News extends Component {
+<file path="src/components/ErrorState.jsx">
+import React from 'react';
 
-  state = {
-    progress:0
-  }
-
-  setprogress=(progress)=>{
-    this.setState({progress: progress})
-  }
-  render() {
+export default function ErrorState({ type = 'generic', message, onRetry }) {
+  if (type === 'missing_key' || message === 'API_KEY_MISSING') {
     return (
-      <div>
-        <Navbar/>
-        <LoadingBar
-        color='#f11946'
-        height={2}
-        progress={this.state.progress}
-      />
-        <Routes>
-    <Route exact path="/business"  element={<App setprogress={this.setprogress} key="business" country='in' category='business'/>}></Route>
-    <Route exact path="/"  element={<App setprogress={this.setprogress} key="business" country='in' category='business'/>}></Route>
-    <Route exact path="/entertainment" element={<App setprogress={this.setprogress} key="entertainment" country="in" category="entertainment"/>}></Route>
-    <Route exact path="/general" element={<App setprogress={this.setprogress} key="general" country='in' category='general'/>}> </Route>
-    <Route exact path="/health" element={<App setprogress={this.setprogress} key="health" country='in' category='health'/>}> </Route>
-    <Route exact path="/science" element={<App setprogress={this.setprogress} key="science" country='in' category='science'/>}> </Route>
-    <Route exact path="/sports" element={<App setprogress={this.setprogress} key="sports" country='in' category='sports'/>}></Route>
-    <Route exact path="/technology" element={<App setprogress={this.setprogress} key="technology" country='in' category='technology'/>}> </Route>
-    </Routes>
-      </div>
-    )
-  }
-}
-</file>
-
-<file path="src/components/NewsCard.js">
-import React, { Component } from 'react';
-import '../App.css'
-export default class NewsCard extends Component {
-  render() {
-    let { title, description, imgurl, newsurl, author, Date, source } = this.props;
-    return (
-      <div className="news-card">
-        <div className="card">
-          <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            {source}
-          </span>
-          <img 
-            src={!imgurl ? "image.jpg" : imgurl} 
-            className="card-img-top" 
-            alt="news" 
-          />
-          <div className="card-body">
-            <h5 className="card-title">{title}</h5>
-            <p className="card-text">{description}</p>
-            <p className="card-text">
-              <small className="text-muted">By {!author ? "Unknown" : author} on {Date}</small>
-            </p>
-            <a href={newsurl} className="btn btn-primary">Read full article</a>
-          </div>
+      <div className="max-w-xl mx-auto my-12 p-6 md:p-8 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 rounded-2xl text-amber-900 dark:text-amber-200 shadow-md">
+        <div className="flex items-center gap-3 mb-4">
+          <svg className="w-8 h-8 text-amber-600 dark:text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <h3 className="text-xl font-bold">NewsData.io API Key Required</h3>
         </div>
+        <p className="text-sm md:text-base leading-relaxed mb-4">
+          To display real-time news articles, you need a free API key from <a href="https://newsdata.io/" target="_blank" rel="noopener noreferrer" className="underline font-semibold hover:text-amber-700 dark:hover:text-amber-100">NewsData.io</a>.
+        </p>
+        <div className="bg-amber-100/80 dark:bg-amber-900/40 p-4 rounded-lg font-mono text-xs md:text-sm mb-4 border border-amber-200 dark:border-amber-800 overflow-x-auto">
+          <p className="text-amber-800 dark:text-amber-300 mb-1"># 1. Open or create .env in project root</p>
+          <p className="font-bold text-amber-950 dark:text-amber-100">REACT_APP_NEWSDATA_API_KEY=your_api_key_here</p>
+          <p className="text-amber-800 dark:text-amber-300 mt-2"># 2. Restart your React development server</p>
+        </div>
+        <p className="text-xs text-amber-700 dark:text-amber-400">
+          Once your key is configured, refresh the page to view news feeds.
+        </p>
       </div>
     );
   }
+
+  if (type === 'rate_limit' || message === 'RATE_LIMIT_EXCEEDED') {
+    return (
+      <div className="max-w-md mx-auto my-12 p-6 bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800/60 rounded-2xl text-center shadow-sm">
+        <div className="w-12 h-12 mx-auto mb-3 bg-orange-100 dark:bg-orange-900/60 rounded-full flex items-center justify-center text-orange-600 dark:text-orange-300">
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">API Rate Limit Exceeded</h3>
+        <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+          You've reached the request limit for the NewsData.io free tier. Please wait a few moments before requesting more articles.
+        </p>
+        {onRetry && (
+          <button
+            onClick={onRetry}
+            className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm"
+          >
+            Retry Request
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  if (type === 'empty') {
+    return (
+      <div className="max-w-md mx-auto my-16 p-8 text-center">
+        <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400">
+          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+          </svg>
+        </div>
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-1">No Articles Found</h3>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+          {message || 'We could not find any news matching your current topic or search parameters.'}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-md mx-auto my-12 p-6 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 rounded-2xl text-center shadow-sm">
+      <div className="w-12 h-12 mx-auto mb-3 bg-red-100 dark:bg-red-900/60 rounded-full flex items-center justify-center text-red-600 dark:text-red-300">
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1">Unable to Load News</h3>
+      <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+        {message || 'An unexpected error occurred while fetching the latest stories.'}
+      </p>
+      {onRetry && (
+        <button
+          onClick={onRetry}
+          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 font-medium rounded-lg text-sm transition-colors shadow-sm"
+        >
+          Try Again
+        </button>
+      )}
+    </div>
+  );
 }
 </file>
 
-<file path="src/index.css">
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+<file path="src/components/Navbar.jsx">
+import React, { useState, useEffect } from 'react';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+const categories = [
+  { name: 'General', path: '/general' },
+  { name: 'Business', path: '/business' },
+  { name: 'Entertainment', path: '/entertainment' },
+  { name: 'Health', path: '/health' },
+  { name: 'Science', path: '/science' },
+  { name: 'Sports', path: '/sports' },
+  { name: 'Technology', path: '/technology' },
+];
+
+export default function Navbar({ isDarkMode, toggleDarkMode }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (location.pathname === '/search') {
+      const params = new URLSearchParams(location.search);
+      setSearchQuery(params.get('q') || '');
+    }
+  }, [location]);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setMobileMenuOpen(false);
+    }
+  };
+
+  return (
+    <header className={`sticky top-0 z-50 transition-all duration-200 ${
+      scrolled 
+        ? 'bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-md border-b border-slate-200 dark:border-slate-800' 
+        : 'bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800'
+    }`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 gap-4">
+          
+          {/* Logo & Brand */}
+          <div className="flex items-center gap-3 shrink-0">
+            <Link to="/" className="flex items-center gap-2 group">
+              <span className="w-9 h-9 rounded-xl bg-gradient-to-tr from-red-600 to-amber-500 text-white font-black flex items-center justify-center text-lg shadow-sm group-hover:scale-105 transition-transform">
+                NT
+              </span>
+              <span className="text-xl font-extrabold tracking-tight text-slate-950 dark:text-white">
+                News<span className="text-red-600 dark:text-red-500">Tak</span>
+              </span>
+            </Link>
+          </div>
+
+          {/* Desktop Category Navigation */}
+          <nav className="hidden lg:flex items-center space-x-1">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                `px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
+                  isActive
+                    ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950 shadow-sm'
+                    : 'text-slate-700 hover:text-slate-950 dark:text-slate-200 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`
+              }
+            >
+              Top News
+            </NavLink>
+
+            {categories.map((cat) => (
+              <NavLink
+                key={cat.path}
+                to={cat.path}
+                className={({ isActive }) =>
+                  `px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
+                    isActive
+                      ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950 shadow-sm'
+                      : 'text-slate-700 hover:text-slate-950 dark:text-slate-200 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`
+                }
+              >
+                {cat.name}
+              </NavLink>
+            ))}
+          </nav>
+
+          {/* Search & Dark Mode Toggle */}
+          <div className="flex items-center gap-3">
+            {/* Desktop Search Input */}
+            <form onSubmit={handleSearchSubmit} className="relative hidden sm:block w-48 md:w-64">
+              <input
+                type="text"
+                placeholder="Search news..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-1.5 text-xs md:text-sm bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-50 placeholder-slate-500 dark:placeholder-slate-400 rounded-full border border-slate-300 dark:border-slate-700 focus:border-red-500 dark:focus:border-red-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none transition-all"
+              />
+              <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-2.5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </form>
+
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              aria-label="Toggle Theme"
+              className="p-2 rounded-full text-slate-700 hover:text-slate-950 dark:text-slate-200 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            >
+              {isDarkMode ? (
+                <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              )}
+            </button>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+            >
+              {mobileMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Search & Menu Overlay */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden py-4 border-t border-slate-200 dark:border-slate-800 space-y-4 bg-white dark:bg-slate-900">
+            <form onSubmit={handleSearchSubmit} className="relative px-2">
+              <input
+                type="text"
+                placeholder="Search news..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-50 placeholder-slate-500 dark:placeholder-slate-400 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-red-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none"
+              />
+              <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-5 top-3 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </form>
+
+            <nav className="grid grid-cols-2 gap-1 px-2">
+              <NavLink
+                to="/"
+                end
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-md text-xs font-bold uppercase tracking-wider ${
+                    isActive
+                      ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
+                      : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`
+                }
+              >
+                Top News
+              </NavLink>
+              {categories.map((cat) => (
+                <NavLink
+                  key={cat.path}
+                  to={cat.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `px-3 py-2 rounded-md text-xs font-bold uppercase tracking-wider ${
+                      isActive
+                        ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
+                        : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`
+                  }
+                >
+                  {cat.name}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+        )}
+      </div>
+    </header>
+  );
 }
 </file>
 
-<file path="src/index.js">
+<file path="src/components/NewsCard.jsx">
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { formatRelativeTime } from '../utils/formatRelativeTime';
+
+export default function NewsCard({ article }) {
+  const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false);
+
+  if (!article) return null;
+
+  const { id, title, description, image_url, source_name, source_id, source_icon, pubDate } = article;
+
+  const handleCardClick = () => {
+    navigate(`/article/${encodeURIComponent(id)}`, { state: { article } });
+  };
+
+  const getFaviconUrl = () => {
+    if (source_icon) return source_icon;
+    if (source_id) {
+      return `https://www.google.com/s2/favicons?domain=${source_id}.com&sz=32`;
+    }
+    return null;
+  };
+
+  const favicon = getFaviconUrl();
+
+  return (
+    <article
+      onClick={handleCardClick}
+      className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex flex-col h-full"
+    >
+      {/* Image container */}
+      <div className="relative h-48 w-full bg-slate-100 dark:bg-slate-800 overflow-hidden shrink-0">
+        {!image_url || imageError ? (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 text-slate-500 dark:text-slate-400 p-4">
+            <svg className="w-10 h-10 mb-2 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+            </svg>
+            <span className="text-xs font-bold tracking-wider uppercase text-slate-600 dark:text-slate-300">News Tak</span>
+          </div>
+        ) : (
+          <img
+            src={image_url}
+            alt={title}
+            onError={() => setImageError(true)}
+            loading="lazy"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
+          />
+        )}
+        <div className="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-md border border-white/20">
+          {favicon && (
+            <img
+              src={favicon}
+              alt=""
+              className="w-3.5 h-3.5 rounded-full object-contain"
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+          )}
+          <span className="truncate max-w-[130px]">{source_name || source_id}</span>
+        </div>
+      </div>
+
+      {/* Card Content */}
+      <div className="p-5 flex flex-col flex-1 bg-white dark:bg-slate-900">
+        {/* Title */}
+        <h3 className="text-base font-bold text-slate-900 dark:text-slate-50 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug mb-2.5">
+          {title}
+        </h3>
+
+        {/* Short Description */}
+        <p className="text-xs md:text-sm text-slate-700 dark:text-slate-300 line-clamp-3 leading-relaxed mb-4 flex-1 font-normal">
+          {description || 'No description available for this story.'}
+        </p>
+
+        {/* Footer */}
+        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
+          <span className="font-semibold">{formatRelativeTime(pubDate)}</span>
+          <span className="text-blue-600 dark:text-blue-400 font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+            Read story
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
+      </div>
+    </article>
+  );
+}
+</file>
+
+<file path="src/components/SkeletonCard.jsx">
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router } from 'react-router-dom';
-import News from './components/News';
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <Router>
-    <News />
-  </Router>
-);
-reportWebVitals();
+
+export default function SkeletonCard() {
+  return (
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm flex flex-col h-full animate-pulse">
+      {/* Image Skeleton */}
+      <div className="h-48 bg-slate-200 dark:bg-slate-800 w-full shrink-0" />
+      
+      {/* Content Skeleton */}
+      <div className="p-5 flex flex-col flex-1">
+        {/* Source Badge & Date */}
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded-full w-24" />
+          <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-16" />
+        </div>
+
+        {/* Title */}
+        <div className="space-y-2 mb-3">
+          <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded w-full" />
+          <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded w-4/5" />
+        </div>
+
+        {/* Description */}
+        <div className="space-y-2 mb-4 flex-1">
+          <div className="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-full" />
+          <div className="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-11/12" />
+          <div className="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-2/3" />
+        </div>
+
+        {/* Footer */}
+        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <div className="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-20" />
+          <div className="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-16" />
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="src/pages/ArticleDetail.jsx">
+import React, { useEffect, useState } from 'react';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { formatRelativeTime, formatFullDate } from '../utils/formatRelativeTime';
+import { fetchNewsByCategory } from '../services/newsApi';
+import NewsCard from '../components/NewsCard';
+import SkeletonCard from '../components/SkeletonCard';
+
+export default function ArticleDetail({ setProgress }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const article = location.state?.article;
+
+  const [recommendations, setRecommendations] = useState([]);
+  const [loadingRecs, setLoadingRecs] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  // Scroll to top of page when article loads
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (article?.title) {
+      document.title = `${article.title} - News Tak`;
+    } else {
+      document.title = 'Article Detail - News Tak';
+    }
+  }, [article]);
+
+  // Fetch recommendations for "More from {category}"
+  useEffect(() => {
+    if (!article?.category) return;
+    let isMounted = true;
+    setLoadingRecs(true);
+
+    fetchNewsByCategory({ category: article.category, country: 'in' })
+      .then((res) => {
+        if (isMounted) {
+          const filtered = res.articles.filter((a) => a.id !== article.id).slice(0, 4);
+          setRecommendations(filtered);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load related stories:', err);
+      })
+      .finally(() => {
+        if (isMounted) setLoadingRecs(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [article]);
+
+  if (!article) {
+    return (
+      <main className="min-h-screen py-16 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex items-center justify-center px-4">
+        <div className="max-w-md w-full p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-center shadow-lg">
+          <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400">
+            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-bold mb-2 text-slate-900 dark:text-white">Article Not Found</h2>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
+            Direct navigation to article links without session state is unavailable. Please return home to select stories.
+          </p>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-semibold rounded-xl text-sm transition-colors shadow-sm"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to News Feed
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  const { title, description, content, image_url, link, source_name, source_id, source_icon, pubDate, creator, category } = article;
+
+  // Combine and format story body into rich readable paragraphs
+  let fullStoryText = '';
+  if (content && description && content !== description) {
+    if (content.startsWith(description)) {
+      fullStoryText = content;
+    } else {
+      fullStoryText = `${description}\n\n${content}`;
+    }
+  } else {
+    fullStoryText = content || description || '';
+  }
+
+  const paragraphs = fullStoryText
+    .split(/\n+/)
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
+
+  return (
+    <main className="min-h-screen pb-20 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+      
+      {/* Top Navigation Back Button */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6">
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors py-2 px-3 bg-slate-200/60 dark:bg-slate-800/60 rounded-lg"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Back to Stories
+        </button>
+      </div>
+
+      {/* Main Article Container */}
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 pt-4">
+        
+        {/* Category Badge */}
+        <div className="mb-3">
+          <span className="inline-block px-3 py-1 bg-red-100 dark:bg-red-950/80 text-red-700 dark:text-red-300 font-bold text-xs uppercase tracking-wider rounded-full border border-red-200 dark:border-red-900/60">
+            {category || 'General'}
+          </span>
+        </div>
+
+        {/* Headline */}
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 dark:text-white leading-[1.2] mb-6">
+          {title}
+        </h1>
+
+        {/* Metadata Row */}
+        <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-slate-200 dark:border-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-8">
+          <div className="flex items-center gap-3">
+            {source_icon ? (
+              <img src={source_icon} alt="" className="w-7 h-7 rounded-full object-contain bg-white p-0.5 shadow-sm" />
+            ) : (
+              <div className="w-7 h-7 rounded-full bg-slate-900 text-white font-bold flex items-center justify-center text-[10px] uppercase">
+                {(source_name || source_id || 'N').slice(0, 2)}
+              </div>
+            )}
+            <div>
+              <span className="font-bold text-slate-950 dark:text-slate-100 block">{source_name || source_id}</span>
+              {creator && <span className="text-slate-600 dark:text-slate-400">By {creator}</span>}
+            </div>
+          </div>
+
+          <div className="text-right">
+            <span className="font-bold text-slate-900 dark:text-slate-200 block">{formatRelativeTime(pubDate)}</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400">{formatFullDate(pubDate)}</span>
+          </div>
+        </div>
+
+        {/* Hero Image */}
+        {image_url && !imageError && (
+          <div className="mb-8 rounded-2xl overflow-hidden shadow-md bg-slate-100 dark:bg-slate-900 max-h-[520px]">
+            <img
+              src={image_url}
+              alt={title}
+              onError={() => setImageError(true)}
+              className="w-full h-full object-cover max-h-[520px]"
+            />
+          </div>
+        )}
+
+        {/* Article Body Content */}
+        <div className="max-w-3xl mx-auto">
+          <div className="font-serif text-base sm:text-lg md:text-xl text-slate-900 dark:text-slate-100 leading-relaxed space-y-6">
+            {paragraphs.length > 0 ? (
+              paragraphs.map((p, idx) => (
+                <p
+                  key={idx}
+                  className={
+                    idx === 0
+                      ? 'text-lg sm:text-xl md:text-2xl font-sans font-semibold text-slate-950 dark:text-white leading-snug border-l-4 border-red-600 pl-4 py-1.5 italic mb-6 bg-slate-100/60 dark:bg-slate-900/60 rounded-r-lg'
+                      : ''
+                  }
+                >
+                  {p}
+                </p>
+              ))
+            ) : (
+              <p className="italic text-slate-600 dark:text-slate-400">
+                Summary preview unavailable for this article. Click below to view the original source.
+              </p>
+            )}
+          </div>
+
+          {/* External Source Link CTA */}
+          <div className="my-10 p-6 md:p-8 bg-gradient-to-br from-slate-100 to-slate-200/70 dark:from-slate-900 dark:to-slate-950 border border-slate-300 dark:border-slate-800 rounded-2xl text-center shadow-sm">
+            <h3 className="text-lg font-bold text-slate-950 dark:text-white mb-2">
+              Read the Full Story on {source_name || 'Original Publisher'}
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-5 max-w-lg mx-auto leading-relaxed">
+              NewsData.io free tier provides condensed story excerpts. Click below to read the complete unmodified report directly at the source.
+            </p>
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-sm md:text-base transition-all shadow-md hover:shadow-lg hover:scale-[1.02]"
+            >
+              Read Original Article on {source_name || 'Publisher'}
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        {/* More from Category Recommendations */}
+        {(loadingRecs || recommendations.length > 0) && (
+          <div className="mt-16 pt-12 border-t border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-950 dark:text-white">
+                More from {category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Feed'}
+              </h2>
+              <Link
+                to={`/${category || 'general'}`}
+                className="text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400 hover:underline"
+              >
+                View all →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {loadingRecs
+                ? Array.from({ length: 4 }).map((_, idx) => <SkeletonCard key={idx} />)
+                : recommendations.map((recArticle) => (
+                    <NewsCard key={recArticle.id} article={recArticle} />
+                  ))}
+            </div>
+          </div>
+        )}
+
+      </article>
+    </main>
+  );
+}
+</file>
+
+<file path="src/pages/NewsHome.jsx">
+import React, { useState, useEffect, useCallback } from 'react';
+import { fetchNewsByCategory } from '../services/newsApi';
+import NewsCard from '../components/NewsCard';
+import SkeletonCard from '../components/SkeletonCard';
+import ErrorState from '../components/ErrorState';
+
+export default function NewsHome({ category = 'top', setProgress }) {
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState(null);
+  const [nextPage, setNextPage] = useState(null);
+
+  const displayCategoryName = category === 'top' || category === 'general' ? 'Top Headlines' : category.charAt(0).toUpperCase() + category.slice(1);
+
+  // Update document title
+  useEffect(() => {
+    document.title = `${displayCategoryName} - News Tak`;
+  }, [displayCategoryName]);
+
+  const loadInitialNews = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    if (setProgress) setProgress(30);
+
+    try {
+      const data = await fetchNewsByCategory({ category, country: 'in' });
+      setArticles(data.articles);
+      setNextPage(data.nextPage);
+      if (setProgress) setProgress(100);
+    } catch (err) {
+      console.error('Error fetching category news:', err);
+      setError(err.message || 'Failed to fetch news');
+      if (setProgress) setProgress(100);
+    } finally {
+      setLoading(false);
+    }
+  }, [category, setProgress]);
+
+  useEffect(() => {
+    loadInitialNews();
+  }, [loadInitialNews]);
+
+  const handleLoadMore = async () => {
+    if (!nextPage || loadingMore) return;
+    setLoadingMore(true);
+
+    try {
+      const data = await fetchNewsByCategory({ category, page: nextPage, country: 'in' });
+      
+      // Deduplicate articles by id
+      setArticles((prev) => {
+        const existingIds = new Set(prev.map((a) => a.id));
+        const newArticles = data.articles.filter((a) => !existingIds.has(a.id));
+        return [...prev, ...newArticles];
+      });
+      setNextPage(data.nextPage);
+    } catch (err) {
+      console.error('Error loading more news:', err);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  return (
+    <main className="min-h-screen pb-16 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        
+        {/* Header Title Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between pb-6 mb-8 border-b border-slate-200 dark:border-slate-800 gap-4">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-500">
+              {category === 'top' || category === 'general' ? 'India' : 'Category'}
+            </span>
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mt-1">
+              {displayCategoryName}
+            </h1>
+          </div>
+          <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400">
+            Real-time coverage & updates from India and around the globe
+          </p>
+        </div>
+
+        {/* Loading State */}
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, idx) => (
+              <SkeletonCard key={idx} />
+            ))}
+          </div>
+        ) : error ? (
+          <ErrorState message={error} onRetry={loadInitialNews} />
+        ) : articles.length === 0 ? (
+          <ErrorState type="empty" message={`No news found for ${displayCategoryName}.`} />
+        ) : (
+          <>
+            {/* News Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {articles.map((article) => (
+                <NewsCard key={article.id} article={article} />
+              ))}
+            </div>
+
+            {/* Pagination / Load More Button */}
+            {nextPage && (
+              <div className="mt-12 text-center">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="px-6 py-3 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 font-semibold rounded-xl text-sm transition-all shadow-sm disabled:opacity-50 inline-flex items-center gap-2"
+                >
+                  {loadingMore ? (
+                    <>
+                      <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                      </svg>
+                      Loading stories...
+                    </>
+                  ) : (
+                    'Load More Stories'
+                  )}
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </main>
+  );
+}
+</file>
+
+<file path="src/pages/SearchResults.jsx">
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { searchNews } from '../services/newsApi';
+import NewsCard from '../components/NewsCard';
+import SkeletonCard from '../components/SkeletonCard';
+import ErrorState from '../components/ErrorState';
+
+export default function SearchResults({ setProgress }) {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('q') || '';
+
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState(null);
+  const [nextPage, setNextPage] = useState(null);
+  const [totalResults, setTotalResults] = useState(0);
+
+  useEffect(() => {
+    document.title = query ? `Search: "${query}" - News Tak` : 'Search News - News Tak';
+  }, [query]);
+
+  const executeSearch = useCallback(async () => {
+    if (!query.trim()) {
+      setArticles([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    if (setProgress) setProgress(30);
+
+    try {
+      const data = await searchNews({ query, country: 'in' });
+      setArticles(data.articles);
+      setNextPage(data.nextPage);
+      setTotalResults(data.totalResults);
+      if (setProgress) setProgress(100);
+    } catch (err) {
+      console.error('Error executing news search:', err);
+      setError(err.message || 'Failed to search news');
+      if (setProgress) setProgress(100);
+    } finally {
+      setLoading(false);
+    }
+  }, [query, setProgress]);
+
+  useEffect(() => {
+    executeSearch();
+  }, [executeSearch]);
+
+  const handleLoadMore = async () => {
+    if (!nextPage || loadingMore) return;
+    setLoadingMore(true);
+
+    try {
+      const data = await searchNews({ query, page: nextPage, country: 'in' });
+      setArticles((prev) => {
+        const existingIds = new Set(prev.map((a) => a.id));
+        const newArticles = data.articles.filter((a) => !existingIds.has(a.id));
+        return [...prev, ...newArticles];
+      });
+      setNextPage(data.nextPage);
+    } catch (err) {
+      console.error('Error loading more search results:', err);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  return (
+    <main className="min-h-screen pb-16 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        
+        {/* Header Title Section */}
+        <div className="pb-6 mb-8 border-b border-slate-200 dark:border-slate-800">
+          <span className="text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-500">
+            Search Results
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white mt-1">
+            Results for <span className="text-red-600 dark:text-red-500">"{query}"</span>
+          </h1>
+          {!loading && !error && (
+            <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">
+              Found {totalResults || articles.length} matching stories
+            </p>
+          )}
+        </div>
+
+        {/* Loading State */}
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, idx) => (
+              <SkeletonCard key={idx} />
+            ))}
+          </div>
+        ) : error ? (
+          <ErrorState message={error} onRetry={executeSearch} />
+        ) : articles.length === 0 ? (
+          <ErrorState type="empty" message={`No news stories found matching "${query}". Try searching with different keywords.`} />
+        ) : (
+          <>
+            {/* News Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {articles.map((article) => (
+                <NewsCard key={article.id} article={article} />
+              ))}
+            </div>
+
+            {/* Load More Button */}
+            {nextPage && (
+              <div className="mt-12 text-center">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="px-6 py-3 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 font-semibold rounded-xl text-sm transition-all shadow-sm disabled:opacity-50 inline-flex items-center gap-2"
+                >
+                  {loadingMore ? (
+                    <>
+                      <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                      </svg>
+                      Loading results...
+                    </>
+                  ) : (
+                    'Load More Results'
+                  )}
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </main>
+  );
+}
+</file>
+
+<file path="src/services/newsApi.js">
+const BASE_URL = 'https://newsdata.io/api/1/latest';
+
+/**
+ * Maps NewsData.io raw category to standard app categories if needed.
+ */
+const mapCategory = (cat) => {
+  if (!cat || cat.toLowerCase() === 'general') {
+    return 'top';
+  }
+  return cat.toLowerCase();
+};
+
+/**
+ * Creates a unique identifier fallback for an article if article_id is missing.
+ */
+const generateId = (item) => {
+  if (item.article_id) return item.article_id;
+  const sourceStr = (item.link || item.title || Math.random().toString());
+  let hash = 0;
+  for (let i = 0; i < sourceStr.length; i++) {
+    const char = sourceStr.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash |= 0;
+  }
+  return 'art_' + Math.abs(hash).toString(36);
+};
+
+/**
+ * Normalizes a raw NewsData.io article object into a clean, predictable shape.
+ */
+export const normalizeArticle = (item) => {
+  const hasPaidExcerptNotice = item.content && typeof item.content === 'string' && item.content.includes('ONLY AVAILABLE IN PAID PLANS');
+  const validContent = (item.content && !hasPaidExcerptNotice) ? item.content : (item.description || '');
+
+  let creatorStr = null;
+  if (Array.isArray(item.creator) && item.creator.length > 0) {
+    creatorStr = item.creator.filter(Boolean).join(', ');
+  } else if (typeof item.creator === 'string') {
+    creatorStr = item.creator;
+  }
+
+  let catStr = 'general';
+  if (Array.isArray(item.category) && item.category.length > 0) {
+    catStr = item.category[0];
+  } else if (typeof item.category === 'string') {
+    catStr = item.category;
+  }
+
+  return {
+    id: generateId(item),
+    title: item.title || 'Untitled Article',
+    description: item.description || '',
+    content: validContent,
+    image_url: item.image_url || null,
+    link: item.link || '#',
+    source_id: item.source_id || 'news',
+    source_name: item.source_name || item.source_id || 'News Source',
+    source_icon: item.source_icon || null,
+    pubDate: item.pubDate || new Date().toISOString(),
+    creator: creatorStr,
+    category: catStr,
+  };
+};
+
+/**
+ * Fetches news articles from NewsData.io by category.
+ * @param {Object} options
+ * @param {string} [options.category='top']
+ * @param {string} [options.page=null]
+ * @param {string} [options.country='in']
+ * @returns {Promise<{articles: Array, nextPage: string|null}>}
+ */
+export const fetchNewsByCategory = async ({ category = 'top', page = null, country = 'in' } = {}) => {
+  const apiKey = process.env.REACT_APP_NEWSDATA_API_KEY;
+
+  if (!apiKey || apiKey.trim() === '' || apiKey === 'your_newsdata_api_key_here') {
+    throw new Error('API_KEY_MISSING');
+  }
+
+  const mappedCat = mapCategory(category);
+  const params = new URLSearchParams({
+    apikey: apiKey,
+    country: country,
+    language: 'en',
+  });
+
+  if (mappedCat) {
+    params.append('category', mappedCat);
+  }
+
+  if (page) {
+    params.append('page', page);
+  }
+
+  const response = await fetch(`${BASE_URL}?${params.toString()}`);
+  const data = await response.json();
+
+  if (!response.ok || data.status === 'error') {
+    const errorMsg = data?.results?.message || data?.message || `API error (${response.status})`;
+    if (response.status === 429 || (errorMsg && errorMsg.toLowerCase().includes('rate limit'))) {
+      throw new Error('RATE_LIMIT_EXCEEDED');
+    }
+    throw new Error(errorMsg);
+  }
+
+  const rawResults = data.results || [];
+  const articles = rawResults.map(normalizeArticle);
+
+  return {
+    articles,
+    nextPage: data.nextPage || null,
+    totalResults: data.totalResults || articles.length,
+  };
+};
+
+/**
+ * Searches news articles on NewsData.io by query string.
+ * @param {Object} options
+ * @param {string} options.query
+ * @param {string} [options.page=null]
+ * @param {string} [options.country='in']
+ * @returns {Promise<{articles: Array, nextPage: string|null}>}
+ */
+export const searchNews = async ({ query, page = null, country = 'in' }) => {
+  const apiKey = process.env.REACT_APP_NEWSDATA_API_KEY;
+
+  if (!apiKey || apiKey.trim() === '' || apiKey === 'your_newsdata_api_key_here') {
+    throw new Error('API_KEY_MISSING');
+  }
+
+  if (!query || query.trim() === '') {
+    return { articles: [], nextPage: null, totalResults: 0 };
+  }
+
+  const params = new URLSearchParams({
+    apikey: apiKey,
+    country: country,
+    language: 'en',
+    q: query.trim(),
+  });
+
+  if (page) {
+    params.append('page', page);
+  }
+
+  const response = await fetch(`${BASE_URL}?${params.toString()}`);
+  const data = await response.json();
+
+  if (!response.ok || data.status === 'error') {
+    const errorMsg = data?.results?.message || data?.message || `API error (${response.status})`;
+    if (response.status === 429 || (errorMsg && errorMsg.toLowerCase().includes('rate limit'))) {
+      throw new Error('RATE_LIMIT_EXCEEDED');
+    }
+    throw new Error(errorMsg);
+  }
+
+  const rawResults = data.results || [];
+  const articles = rawResults.map(normalizeArticle);
+
+  return {
+    articles,
+    nextPage: data.nextPage || null,
+    totalResults: data.totalResults || articles.length,
+  };
+};
+</file>
+
+<file path="src/utils/formatRelativeTime.js">
+/**
+ * Converts a date string or timestamp into a relative time string (e.g., "2 hours ago", "3 days ago").
+ * @param {string|Date|number} dateInput 
+ * @returns {string}
+ */
+export function formatRelativeTime(dateInput) {
+  if (!dateInput) return 'Recently';
+
+  try {
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return 'Recently';
+
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffInSeconds < 30) {
+      return 'Just now';
+    }
+    if (diffInSeconds < 60) {
+      return `${diffInSeconds} seconds ago`;
+    }
+
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      return diffInMinutes === 1 ? '1 minute ago' : `${diffInMinutes} minutes ago`;
+    }
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      return diffInHours === 1 ? '1 hour ago' : `${diffInHours} hours ago`;
+    }
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 30) {
+      return diffInDays === 1 ? '1 day ago' : `${diffInDays} days ago`;
+    }
+
+    const diffInMonths = Math.floor(diffInDays / 30);
+    if (diffInMonths < 12) {
+      return diffInMonths === 1 ? '1 month ago' : `${diffInMonths} months ago`;
+    }
+
+    const diffInYears = Math.floor(diffInMonths / 12);
+    return diffInYears === 1 ? '1 year ago' : `${diffInYears} years ago`;
+  } catch (err) {
+    return 'Recently';
+  }
+}
+
+/**
+ * Formats a date into a clean readable string (e.g. "March 20, 2024 at 2:30 PM")
+ * @param {string|Date|number} dateInput 
+ * @returns {string}
+ */
+export function formatFullDate(dateInput) {
+  if (!dateInput) return '';
+  try {
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return String(dateInput);
+
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(date);
+  } catch (err) {
+    return String(dateInput);
+  }
+}
+</file>
+
+<file path="src/App.jsx">
+import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import LoadingBar from 'react-top-loading-bar';
+import Navbar from './components/Navbar';
+import NewsHome from './pages/NewsHome';
+import ArticleDetail from './pages/ArticleDetail';
+import SearchResults from './pages/SearchResults';
+
+export default function App() {
+  const [progress, setProgress] = useState(0);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('news_tak_dark_mode');
+    if (saved !== null) {
+      return JSON.parse(saved);
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  // Apply dark mode class to root html element
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('news_tak_dark_mode', JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode((prev) => !prev);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-200">
+      <LoadingBar
+        color="#ef4444"
+        height={3}
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
+
+      <Navbar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+
+      <Routes>
+        {/* Main Feed Routes */}
+        <Route path="/" element={<NewsHome category="top" setProgress={setProgress} />} />
+        <Route path="/business" element={<NewsHome key="business" category="business" setProgress={setProgress} />} />
+        <Route path="/entertainment" element={<NewsHome key="entertainment" category="entertainment" setProgress={setProgress} />} />
+        <Route path="/general" element={<NewsHome key="general" category="general" setProgress={setProgress} />} />
+        <Route path="/health" element={<NewsHome key="health" category="health" setProgress={setProgress} />} />
+        <Route path="/science" element={<NewsHome key="science" category="science" setProgress={setProgress} />} />
+        <Route path="/sports" element={<NewsHome key="sports" category="sports" setProgress={setProgress} />} />
+        <Route path="/technology" element={<NewsHome key="technology" category="technology" setProgress={setProgress} />} />
+
+        {/* Article Detail View Route */}
+        <Route path="/article/:id" element={<ArticleDetail setProgress={setProgress} />} />
+
+        {/* Search Results Route */}
+        <Route path="/search" element={<SearchResults setProgress={setProgress} />} />
+
+        {/* Fallback Catch-all Route */}
+        <Route path="*" element={<NewsHome category="top" setProgress={setProgress} />} />
+      </Routes>
+    </div>
+  );
+}
 </file>
 
 <file path="src/reportWebVitals.js">
@@ -234,37 +1407,24 @@ export default reportWebVitals;
 import '@testing-library/jest-dom';
 </file>
 
+<file path=".env.example">
+# NewsData.io API Key
+# Get your free API key at https://newsdata.io/
+REACT_APP_NEWSDATA_API_KEY=your_newsdata_api_key_here
+</file>
+
 <file path=".gitattributes">
 # Auto detect text files and perform LF normalization
 * text=auto
 </file>
 
-<file path=".gitignore">
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-.vercel
+<file path="postcss.config.js">
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
 </file>
 
 <file path="sampleoutput.json">
@@ -458,6 +1618,122 @@ yarn-error.log*
 }
 </file>
 
+<file path="tailwind.config.js">
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./public/index.html"
+  ],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        serif: ['Merriweather', 'Georgia', 'Cambria', 'serif'],
+      },
+      colors: {
+        brand: {
+          50: '#eff6ff',
+          100: '#dbeafe',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          900: '#1e3a8a',
+        }
+      }
+    },
+  },
+  plugins: [],
+}
+</file>
+
+<file path="src/index.css">
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+</file>
+
+<file path="src/index.js">
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router } from 'react-router-dom';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Router>
+      <App />
+    </Router>
+  </React.StrictMode>
+);
+
+reportWebVitals();
+</file>
+
+<file path=".gitignore">
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.env
+/.env
+# testing
+/coverage
+
+# production
+/build
+
+# environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# misc
+.DS_Store
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.vercel
+</file>
+
 <file path="public/index.html">
 <!DOCTYPE html>
 <html lang="en">
@@ -467,153 +1743,99 @@ yarn-error.log*
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
-      name="News tak"
-      content="News tak Lucknow"
+      name="description"
+      content="News Tak - Real-time news coverage and breaking stories"
     />
-    <head>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>News tak</title>
+    <title>News Tak - Modern News Portal</title>
   </head>
-  <body>
+  <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
   </body>
 </html>
 </file>
 
-<file path="src/components/Navbar.js">
-import React from 'react'
-import {Link } from 'react-router-dom';
+<file path="README.md">
+# News Tak - Modern React News Portal
 
-function Navbar() {
-  return (
-    <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
-  <div className="container-fluid">
-    <Link className="navbar-brand" to="/">NewsTak</Link>
-    <button
-  className="navbar-toggler"
-  type="button"
-  data-bs-toggle="collapse"
-  data-bs-target="#navbarSupportedContent"
-  aria-controls="navbarSupportedContent"
-  aria-expanded="false"
-  aria-label="Toggle navigation"
->
-  <span className="navbar-toggler-icon"></span>
-</button>
+A modern, responsive editorial news web application built with **React 18**, **Tailwind CSS**, **React Router v6**, and powered by **NewsData.io API**.
 
-    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Business">Business</Link></li>
-              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Entertainment">Entertainment</Link></li>
-              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/General">General</Link></li>
-              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Health">Health</Link></li>
-              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Science">Science</Link></li>
-              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Sports">Sports</Link></li>
-              <li className='nav-item'><Link className="nav-link text-decoration-none mr-2" to="/Technology">Technology</Link></li>
-        </ul>
-    </div>
-  </div>
-</nav>
-    </div>
-  )
-}
+---
 
-export default Navbar
-</file>
+## Features
 
-<file path="src/App.css">
-.App {
-  text-align: center;
-}
-body{
-  background-color: #929292;
-}
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+- 📰 **Real-Time News Feeds**: Latest news across categories (`General`, `Business`, `Entertainment`, `Health`, `Science`, `Sports`, `Technology`).
+- 🔍 **Live Search**: Instant news search powered by NewsData.io query endpoint.
+- 📖 **Full Article Detail View**: Comprehensive editorial article layout with hero imagery, publisher metadata, readable typography, and external link to original source.
+- 🌓 **Dark Mode**: Built-in dark mode toggle with persistent local storage preference.
+- 📱 **Responsive Grid**: Adaptive card grid with hover scaling, source favicons, and relative publication timestamps.
+- ⚡ **Skeleton Loading & Error States**: Graceful UI placeholders during fetches, rate-limit warnings, and key configuration guides.
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
+---
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
+## Getting Started
 
-.App-link {
-  color: #61dafb;
-}
+### 1. Prerequisites
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+- Node.js (v16+)
+- Free API Key from [NewsData.io](https://newsdata.io/)
 
+### 2. Environment Setup
 
-/* Parent container for news cards */
-/* News card layout fix */
-.card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  overflow: hidden;
-}
+Copy `.env.example` to `.env` or create a `.env` file in the root directory:
 
-/* Make card body stretch */
-.card-body {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
+```bash
+cp .env.example .env
+```
 
-/* Keep button at the bottom */
-.btn-primary {
-  margin-top: auto;
-}
+Add your NewsData.io API Key to `.env`:
 
-/* Responsive Fix */
-@media (max-width: 992px) { /* Tablets (max-width: 992px) */
-  .col-lg-4 {
-    flex: 0 0 50%; /* 2 cards per row */
-    max-width: 50%;
-  }
-}
+```env
+REACT_APP_NEWSDATA_API_KEY=your_newsdata_api_key_here
+```
 
-@media (max-width: 576px) { /* Phones (max-width: 576px) */
-  .col-lg-4 {
-    flex: 0 0 100%; /* 1 card per row */
-    max-width: 100%;
-  }
-}
+> ⚠️ **Note**: Never commit your `.env` file containing private API keys. `.env` is ignored in `.gitignore`.
+
+### 3. Installation
+
+Install project dependencies:
+
+```bash
+npm install
+```
+
+### 4. Running Locally
+
+Start the React development server:
+
+```bash
+npm start
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
+
+---
+
+## Build & Deployment
+
+To generate a production build:
+
+```bash
+npm run build
+```
+
+To deploy to GitHub Pages:
+
+```bash
+npm run deploy
+```
 </file>
 
 <file path="package.json">
 {
-  "homepage": "https://amankhare01.github.io/ecommerce-site",
+  "homepage": "/",
   "name": "newbro",
   "version": "0.1.0",
   "private": true,
@@ -622,7 +1844,6 @@ body{
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "gh-pages": "^6.0.0",
-    "node-fetch": "^3.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-infinite-scroll-component": "^6.1.0",
@@ -658,163 +1879,11 @@ body{
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "autoprefixer": "^10.5.4",
+    "postcss": "^8.5.26",
+    "tailwindcss": "^3.4.19"
   }
-}
-</file>
-
-<file path="README.md">
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open (https://new-article-production.up.railway.app/) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-</file>
-
-<file path="src/App.js">
-import React, { Component } from 'react';
-import './App.css';
-import NewsCard from './components/NewsCard';
-import PropTypes from 'prop-types';
-
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      articles: [],
-      loading: false,
-    };
-    document.title = `${this.capitalize(this.props.category)} - News Tak`;
-  }
-
-  capitalize = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
-  async componentDidMount() {
-    this.props.setprogress(10);
-    const apiKey = "e92fe607bf0f01dbd6c3f4cc0b39dbd2"; // Replace with your GNews API key
-    const url = `https://gnews.io/api/v4/top-headlines?token=${apiKey}&lang=en&country=in&q=${this.props.category}`;
-
-    try {
-      let response = await fetch(url);
-      let parsedData = await response.json();
-      console.log(parsedData);
-      this.setState({ articles: parsedData.articles });
-    } catch (error) {
-      console.error("Error fetching GNews data:", error);
-    }
-    this.props.setprogress(100);
-  }
-
-  render() {
-    return (
-      <div className="container">
-        <center>
-          <h1 className="text-grey" style={{ marginTop: '50px' }}>
-            News Tak - {this.capitalize(this.props.category)}
-          </h1>
-          {/* <h4 className="p-1s">
-            <em>
-              <u>Aapko Rakhe aage</u>
-            </em>
-          </h4> */}
-        </center>
-        <div className="row mt-1 mb-1">
-          {this.state.articles && this.state.articles.length > 0 ? (
-            this.state.articles.map((element) => (
-              <div className="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch" key={element.url}>
-                <NewsCard
-                  title={element.title}
-                  description={element.description}
-                  imgurl={element.image}
-                  newsurl={element.url}
-                  author={element.source?.name}
-                  Date={element.publishedAt}
-                  source={element.source?.name}
-                />
-              </div>
-            ))
-          ) : (
-            <p>Loading</p>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  static defaultProps = {
-    category: 'general',
-  };
-
-  static propTypes = {
-    category: PropTypes.string,
-  };
 }
 </file>
 

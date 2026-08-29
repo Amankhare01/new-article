@@ -4,6 +4,7 @@ import { formatRelativeTime } from '../utils/formatRelativeTime';
 
 export default function NewsCard({ article }) {
   const navigate = useNavigate();
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   if (!article) return null;
@@ -39,13 +40,21 @@ export default function NewsCard({ article }) {
             <span className="text-xs font-bold tracking-wider uppercase text-slate-600 dark:text-slate-300">News Tak</span>
           </div>
         ) : (
-          <img
-            src={image_url}
-            alt={title}
-            onError={() => setImageError(true)}
-            loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
-          />
+          <>
+            {!imageLoaded && (
+              <div className="absolute inset-0 bg-slate-200 dark:bg-slate-800 animate-pulse" />
+            )}
+            <img
+              src={image_url}
+              alt={title}
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageError(true)}
+              loading="lazy"
+              className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-300 ease-out ${
+                imageLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+          </>
         )}
         <div className="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-md border border-white/20">
           {favicon && (

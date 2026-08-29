@@ -1,13 +1,16 @@
+import { getPrimaryCategory } from '../utils/formatCategory';
+
 const BASE_URL = 'https://newsdata.io/api/1/latest';
 
 /**
  * Maps NewsData.io raw category to standard app categories if needed.
  */
 const mapCategory = (cat) => {
-  if (!cat || cat.toLowerCase() === 'general') {
+  const catStr = getPrimaryCategory(cat);
+  if (!catStr || catStr === 'general') {
     return 'top';
   }
-  return cat.toLowerCase();
+  return catStr;
 };
 
 /**
@@ -39,11 +42,18 @@ export const normalizeArticle = (item) => {
     creatorStr = item.creator;
   }
 
-  let catStr = 'general';
+  let catVal = ['general'];
   if (Array.isArray(item.category) && item.category.length > 0) {
-    catStr = item.category[0];
-  } else if (typeof item.category === 'string') {
-    catStr = item.category;
+    catVal = item.category.filter(Boolean);
+  } else if (typeof item.category === 'string' && item.category.trim().length > 0) {
+    catVal = [item.category.trim()];
+  }
+
+  let keywordsArr = [];
+  if (Array.isArray(item.keywords)) {
+    keywordsArr = item.keywords.filter((k) => typeof k === 'string' && k.trim().length > 0);
+  } else if (typeof item.keywords === 'string' && item.keywords.trim().length > 0) {
+    keywordsArr = item.keywords.split(',').map((k) => k.trim()).filter(Boolean);
   }
 
   return {
@@ -58,14 +68,15 @@ export const normalizeArticle = (item) => {
     source_icon: item.source_icon || null,
     pubDate: item.pubDate || new Date().toISOString(),
     creator: creatorStr,
-    category: catStr,
+    category: catVal,
+    keywords: keywordsArr,
   };
 };
 
 /**
  * Fetches news articles from NewsData.io by category.
  * @param {Object} options
- * @param {string} [options.category='top']
+ * @param {string|Array} [options.category='top']
  * @param {string} [options.page=null]
  * @param {string} [options.country='in']
  * @returns {Promise<{articles: Array, nextPage: string|null}>}

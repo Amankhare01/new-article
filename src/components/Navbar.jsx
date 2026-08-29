@@ -67,12 +67,12 @@ export default function Navbar({ isDarkMode, toggleDarkMode }) {
           </div>
 
           {/* Desktop Category Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1">
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1">
             <NavLink
               to="/"
               end
               className={({ isActive }) =>
-                `px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
+                `px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors ${
                   isActive
                     ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950 shadow-sm'
                     : 'text-slate-700 hover:text-slate-950 dark:text-slate-200 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -87,7 +87,7 @@ export default function Navbar({ isDarkMode, toggleDarkMode }) {
                 key={cat.path}
                 to={cat.path}
                 className={({ isActive }) =>
-                  `px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
+                  `px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors ${
                     isActive
                       ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950 shadow-sm'
                       : 'text-slate-700 hover:text-slate-950 dark:text-slate-200 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -100,9 +100,9 @@ export default function Navbar({ isDarkMode, toggleDarkMode }) {
           </nav>
 
           {/* Search & Dark Mode Toggle */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0 sm:shrink min-w-0">
             {/* Desktop Search Input */}
-            <form onSubmit={handleSearchSubmit} className="relative hidden sm:block w-48 md:w-64">
+            <form onSubmit={handleSearchSubmit} className="relative hidden sm:block min-w-0 flex-1 w-32 sm:w-40 md:w-52 lg:w-56 xl:w-64 max-w-[260px]">
               <input
                 type="text"
                 placeholder="Search news..."
